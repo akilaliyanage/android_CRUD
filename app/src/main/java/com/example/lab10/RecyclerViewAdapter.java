@@ -65,6 +65,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 public void onClick(View view) {
                     Toast.makeText(mContext,String.valueOf(getAdapterPosition()),Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(mContext,message.class);
+                    intent.putExtra("sub",messageData.get(getAdapterPosition()).getSubject());
+                    intent.putExtra("msg",messageData.get(getAdapterPosition()).getMessage());
                     mContext.startActivity(intent);
                 }
             });

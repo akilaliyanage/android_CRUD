@@ -2,10 +2,13 @@ package com.example.lab10.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
 
 public final class DBHandlerMessage extends SQLiteOpenHelper {
 
@@ -36,5 +39,39 @@ public final class DBHandlerMessage extends SQLiteOpenHelper {
 
         boolean newRowId = db.insert(MessageMaster.Message.TABLE_NAME,null,values) > 0;
         return  newRowId;
+    }
+
+    public ArrayList<MessageData> readAllMsgs(){
+        SQLiteDatabase db = getReadableDatabase();
+
+        String[] projection = {
+                MessageMaster.Message._ID,
+                MessageMaster.Message.COLUMN_NAME_SUBJECT,
+                MessageMaster.Message.COLUMN_NAME_MESSAGE
+        };
+
+        String sortOrder = MessageMaster.Message.COLUMN_NAME_MESSAGE + " DESC";
+
+        Cursor cursor = db.query(
+                MessageMaster.Message.TABLE_NAME,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                sortOrder
+        );
+
+        ArrayList<MessageData> data = new ArrayList<MessageData>();
+
+        while(cursor.moveToNext()){
+            String sub = cursor.getString(cursor.getColumnIndexOrThrow(MessageMaster.Message.COLUMN_NAME_SUBJECT));
+            String msg = cursor.getString(cursor.getColumnIndexOrThrow(MessageMaster.Message.COLUMN_NAME_MESSAGE));
+
+            MessageData messageData = new MessageData(sub,msg);
+            data.add(messageData);
+        }
+
+        return data;
     }
 }

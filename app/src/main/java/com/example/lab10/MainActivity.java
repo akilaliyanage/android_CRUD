@@ -1,8 +1,14 @@
 package com.example.lab10;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
@@ -26,6 +32,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //otification channel
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel = new NotificationChannel("You have a new message","You have a new message",NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
 
         //findviewbyid
         regBtn = findViewById(R.id.regBtn);
@@ -61,9 +74,19 @@ public class MainActivity extends AppCompatActivity {
                         intent.putExtra("user", userList.get(0).getUsername());
                         startActivity(intent);
                     }else if(userList.get(0).getType().equals("student")){
+//                        Intent intent = new Intent(MainActivity.this,student.class);
+//                        intent.putExtra("user", userList.get(0).getUsername());
+//                        startActivity(intent);
+
                         Intent intent = new Intent(MainActivity.this,student.class);
                         intent.putExtra("user", userList.get(0).getUsername());
-                        startActivity(intent);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this,0,intent,0);
+
+                        NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this,"You have a new message").setSmallIcon(R.drawable.ic_launcher_background).setContentTitle("You have a new message").setContentText("you have a new message").setPriority(NotificationCompat.PRIORITY_DEFAULT).setContentIntent(pendingIntent).setAutoCancel(true);
+                        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(MainActivity.this);
+
+                        notificationManagerCompat.notify(0,builder.build());
                     }
                 }
             }

@@ -1,12 +1,14 @@
 package com.example.lab10;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.example.lab10.message;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -56,6 +58,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             super(itemView);
             subject = itemView.findViewById(R.id.heading);
             message = itemView.findViewById(R.id.heading2);
+            layout = itemView.findViewById(R.id.parent_layout);
+
+            subject.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(mContext,String.valueOf(getAdapterPosition()),Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(mContext,message.class);
+                    mContext.startActivity(intent);
+                }
+            });
             this.onNoteListner = onNoteListner;
 
             itemView.setOnClickListener(this);

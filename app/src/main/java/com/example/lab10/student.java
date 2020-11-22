@@ -13,7 +13,7 @@ import com.example.lab10.database.MessageData;
 
 import java.util.ArrayList;
 
-public class student extends AppCompatActivity {
+public class student extends AppCompatActivity implements RecyclerViewAdapter.OnNoteListner {
 
     private TextView head;
     private ArrayList<MessageData> messageData = new ArrayList<MessageData>();
@@ -42,8 +42,13 @@ public class student extends AppCompatActivity {
 
     private void initRecyclerView(){
         RecyclerView recyclerView = findViewById(R.id.rcview);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(messageData,student.this);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(messageData,student.this,this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(student.this));
+    }
+
+    @Override
+    public void onNoteClick(int position) {
+        //start new act
     }
 }
